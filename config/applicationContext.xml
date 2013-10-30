@@ -18,7 +18,7 @@
 	default-autowire="byName">
 	
 	<!-- 注解扫描Service -->
-	<context:component-scan base-package="com.server.service" use-default-filters="true"/>
+	<context:component-scan base-package="com.wy.shopping.service" use-default-filters="true"/>
 	
 	<!-- 初始化SpringUtil -->
 	<bean id="SpringUtil" class="com.server.utils.SpringUtils"/>

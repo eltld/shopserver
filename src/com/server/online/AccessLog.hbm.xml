@@ -7,7 +7,7 @@
 <hibernate-mapping>
 	 
 
-	<class name="com.th.mobile.collection.server.online.AccessLog" table="ACCESSLOG"> 
+	<class name="com.server.online.AccessLog" table="ACCESSLOG"> 
 		<id column="ID" name="Id" type="java.lang.Long" unsaved-value="null"> 
 			<generator class="native"></generator> 
 		</id> 

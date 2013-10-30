@@ -8,16 +8,14 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.mysql.jdbc.log.Log;
 import com.server.online.AccessLog;
 import com.server.online.OnlineUser;
 import com.server.online.OnlineUserManager;
-import com.server.service.core.ServerResponse;
-import com.server.service.core.ServiceResponse;
+import com.wy.shopping.service.core.ServerResponse;
+import com.wy.shopping.service.core.ServiceResponse;
 
 
 @Controller

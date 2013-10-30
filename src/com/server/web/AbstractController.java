@@ -5,7 +5,7 @@ import java.io.OutputStream;
 
 import org.springframework.ui.ModelMap;
 
-import com.server.service.core.ServiceResponse;
+import com.wy.shopping.service.core.ServiceResponse;
 
 
 public class AbstractController {

@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.server.service.core.ServiceResponse;
+import com.wy.shopping.service.core.ServiceResponse;
 
 public class ServiceRequestHandler {
 	
