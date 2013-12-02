@@ -19,9 +19,8 @@ public class ChatServer {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup)
-             .channel(NioServerSocketChannel.class)
-             .childHandler(new ChatServerInitializer());
+            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
+                    .childHandler(new ChatServerInitializer());
             b.option(ChannelOption.SO_KEEPALIVE, true);
             b.option(ChannelOption.TCP_NODELAY, true);
             b.option(ChannelOption.SO_REUSEADDR, true);
@@ -33,7 +32,7 @@ public class ChatServer {
     }
 
     public static void main(String[] args) throws Exception {
-       int PORT = 9527;
+        int PORT = 9527;
         new ChatServer(PORT).run();
     }
 }

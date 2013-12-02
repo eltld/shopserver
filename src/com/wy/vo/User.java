@@ -8,7 +8,7 @@ public class User implements Serializable{
     
     private String name;
     
-    private String id;
+    private int channelId;
 
     public String getName() {
         return name;
@@ -18,22 +18,17 @@ public class User implements Serializable{
         this.name = name;
     }
 
-    public String getId() {
-        return id;
+    public int getChannelId() {
+        return channelId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setChannelId(int channelId) {
+        this.channelId = channelId;
     }
 
     @Override
     public String toString() {
-        return "User [name=" + name + ", id=" + id + "]";
+        return "User [name=" + name + ", channelId=" + channelId + "]";
     }
-
-    public User(String name, String id) {
-        super();
-        this.name = name;
-        this.id = id;
-    }
+   
 }
