@@ -6,15 +6,15 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class ChatServer {
+public class ChatServer implements Runnable{
 
     private final int port;
 
     public ChatServer(int port) {
         this.port = port;
     }
-
-    public void run() throws InterruptedException {
+    @Override
+    public void run(){
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -25,14 +25,15 @@ public class ChatServer {
             b.option(ChannelOption.TCP_NODELAY, true);
             b.option(ChannelOption.SO_REUSEADDR, true);
             b.bind(port).sync().channel().closeFuture().sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
     }
-
-    public static void main(String[] args) throws Exception {
-        int PORT = 9527;
-        new ChatServer(PORT).run();
+    
+    public static void main(String[] args) {
+        new Thread(new ChatServer(9527)).run();
     }
 }

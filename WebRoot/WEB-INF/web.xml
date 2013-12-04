@@ -12,15 +12,15 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value> classpath*:applicationContext.xml </param-value>
 	</context-param>
-	
+	<!--
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-
+   -->
+  <listener>
+       <listener-class>com.chatserver.MyLoadListenner</listener-class>
+  </listener>
+   
 	<!--Web上下文 start-->
 	<filter>
 		<filter-name>webContextFilter</filter-name>

@@ -92,6 +92,7 @@
 		<property name="mappingResources">   
             <list>
              	 <value>/com/server/online/AccessLog.hbm.xml</value>
+                <value>/com/wy/vo/Info.hbm.xml</value>
                  <!--<value>/com/th/mobile/collection/vo/sys/UserInfo.hbm.xml</value> -->
                 
             </list>   

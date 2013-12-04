@@ -7,24 +7,22 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.wy.vo.Content;
 import com.wy.vo.User;
 
 public class ChatServerHandler extends SimpleChannelInboundHandler<Content> {
 
-    static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    int onlineSize = 0;
+    public static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    public static List<User> onlineUser = new ArrayList<User>();
+    public static Map<Integer, Channel> map = new HashMap<Integer, Channel>();
+
     @Override
     public void channelActive(final ChannelHandlerContext ctx) throws Exception {
-        for (Channel c:channels) {
-            //新好友上线将个人信息广播给其他用户
-            User user = new User();
-            user.setName("王毅"+onlineSize);
-            user.setChannelId(ctx.channel().hashCode());
-            c.writeAndFlush(user);
-            
-        }
-        onlineSize++;
         channels.add(ctx.channel());
     }
 
@@ -42,29 +40,38 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<Content> {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        Content content = (Content) msg;
-        // 群发
-        if (content.getHashCode() == 0) {
+        // 用户上线,将个人信息广播给其他人
+        if (msg instanceof User) {
+            User user = (User) msg;
+            onlineUser.add(user);
+            map.put(user.getChannelId(), ctx.channel());
+
             for (Channel c : channels) {
-                if (c != ctx.channel()) {
-                    c.writeAndFlush(msg);
+                if (c.hashCode() != user.getChannelId()) {
+                    c.writeAndFlush(user);
                 }
             }
         }
-        // 私聊
-        else {
-            for (Channel c : channels) {
-                if (c.hashCode() == msg.hashCode()) {
-                    c.writeAndFlush(msg);
-                    return;
+        if (msg instanceof Content) {
+            Content content = (Content) msg;
+            // 群发
+            if (content.getHashCode() == 0) {
+                for (Channel c : channels) {
+                    if (c != ctx.channel()) {
+                        c.writeAndFlush(msg);
+                    }
                 }
+            }
+            // 私聊
+            else {
+                Channel c = map.get(content.getHashCode());
+                c.writeAndFlush(content);
             }
         }
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Content msg) throws Exception {
-        System.out.println("新好友上线");
     }
 
     @Override
