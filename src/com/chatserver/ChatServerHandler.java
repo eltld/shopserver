@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.wy.vo.Content;
 import com.wy.vo.User;
@@ -40,22 +41,36 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<Content> {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        // 用户上线,将个人信息广播给其他人
         if (msg instanceof User) {
             User user = (User) msg;
-            onlineUser.add(user);
-            map.put(user.getChannelId(), ctx.channel());
-
-            for (Channel c : channels) {
-                if (c.hashCode() != user.getChannelId()) {
-                    c.writeAndFlush(user);
+            // 用户上线,将个人信息广播给其他人
+            if(user.getName()!=null){
+                onlineUser.add(user);
+                for (Entry<Integer, Channel> MapString : map.entrySet()) {
+                    Channel value = MapString.getValue();
+                    value.writeAndFlush(user);
                 }
+                map.put(user.getChannelId(), ctx.channel());
+            }
+            //用户下线,将个人信息广播给其他人
+            else{
+                map.remove(user.getChannelId());
+                for (Entry<Integer, Channel> MapString : map.entrySet()) {
+                    Channel value = MapString.getValue();
+                    value.writeAndFlush(user);
+                }
+                for (int i = 0; i < onlineUser.size(); i++) {
+                    if(onlineUser.get(i).getChannelId()==user.getChannelId()){
+;                        onlineUser.remove(i);
+                    }
+                }
+                
             }
         }
         if (msg instanceof Content) {
             Content content = (Content) msg;
             // 群发
-            if (content.getHashCode() == 0) {
+            if (content.getReceiveId() == 0) {
                 for (Channel c : channels) {
                     if (c != ctx.channel()) {
                         c.writeAndFlush(msg);
@@ -64,7 +79,7 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<Content> {
             }
             // 私聊
             else {
-                Channel c = map.get(content.getHashCode());
+                Channel c = map.get(content.getReceiveId());
                 c.writeAndFlush(content);
             }
         }
@@ -82,7 +97,6 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<Content> {
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        System.out.println(channels.size());
         super.handlerRemoved(ctx);
     }
 
